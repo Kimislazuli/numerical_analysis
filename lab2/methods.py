@@ -67,6 +67,10 @@ def moving_secant(x_0, x_1, m):
 
 
 def phi(x):
+    return -math.acos(2 * math.e ** (-x)) + 2 * math.pi
+
+
+def relax_phi(x):
     return x - 0.98494 * f(x)
 
 
@@ -79,9 +83,19 @@ def simple_iteration(x_0, q):
     return x_n, n
 
 
+def relaxation(x_0, q):
+    n = 1
+    x_n = x_1 = phi(x_0)
+    while abs(x_1 - x_0) * q ** n / (1 - q) > epsilon:
+        x_n = relax_phi(x_n)
+        n += 1
+    return x_n, n
+
+
 print(dichotomy(3 * math.pi / 2, 4.8))
 print(newton(3 * math.pi / 2, 1.01262, 0.10396))
 print(modified_newton(3 * math.pi / 2, 1.01262, 1.01797))
 print(secant(3 * math.pi / 2, 4.8, 1.01262))
 print(moving_secant(3 * math.pi / 2, 4.8, 1.01262))
 print(simple_iteration(3 * math.pi / 2, 0.00264))
+print(relaxation(3 * math.pi / 2, 0.00264))
