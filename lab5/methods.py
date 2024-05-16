@@ -49,6 +49,19 @@ def runge_kutta(x_0, y_0, n):
     ys.reverse()
     return xs, ys
 
+def adams_bashforth(x_0, y_0, x_1, y_1, x_2, y_2, n):
+    h = 1 / n
+    xs = [x_0, x_1, x_2]
+    ys = [y_0, y_1, y_2]
+    for i in range(n - 2):
+        new_y = ys[-1] - h / 12 * (23 * f(xs[-1], ys[-1]) - 16 * f(xs[-2], ys[-2]) + 5 * f(xs[-3], ys[-3]))
+        new_x = float('{:.4f}'.format(xs[-1] - h))
+        ys.append(new_y)
+        xs.append(new_x)
+    xs.reverse()
+    ys.reverse()
+    return xs, ys
+
 
 x = [x / 1000 for x in range(0, 1001)]
 y = [analytic(x) for x in x]
@@ -61,7 +74,7 @@ x_euler_20, y_euler_20 = forward_euler(1, 4, 20)
 # plt.plot(x_euler_20, y_euler_20, label="euler 20", linewidth=0.5)
 
 x_euler_30, y_euler_30 = forward_euler(1, 4, 30)
-# plt.plot(x_euler_30, y_euler_30, label="euler 30", linewidth=0.5)
+plt.plot(x_euler_30, y_euler_30, label="euler 30", linewidth=0.5)
 
 x_rk_10, y_rk_10 = runge_kutta(1, 4, 10)
 # plt.plot(x_rk_10, y_rk_10, label="runge-kutta 10", linewidth=0.5)
@@ -70,7 +83,26 @@ x_rk_20, y_rk_20 = runge_kutta(1, 4, 20)
 # plt.plot(x_rk_20, y_rk_20, label="runge-kutta 20", linewidth=0.5)
 
 x_rk_30, y_rk_30 = runge_kutta(1, 4, 30)
-# plt.plot(x_rk_30, y_rk_30, label="runge-kutta 30", linewidth=0.5)
+plt.plot(x_rk_30, y_rk_30, label="runge-kutta 30", linewidth=0.5)
+
+x_ab_10, y_ab_10 = adams_bashforth(1, 4,
+                                   x_rk_10[-2], y_rk_10[-2],
+                                   x_rk_10[-3], y_rk_10[-3],
+                                   10)
+# plt.plot(x_ab_10, y_ab_10, label="adams-bashforth 10", linewidth=0.5)
+
+x_ab_20, y_ab_20 = adams_bashforth(1, 4,
+                                   x_rk_20[-2], y_rk_20[-2],
+                                   x_rk_20[-3], y_rk_20[-3],
+                                   20)
+# plt.plot(x_ab_20, y_ab_20, label="adams-bashforth 20", linewidth=0.5)
+
+x_ab_30, y_ab_30 = adams_bashforth(1, 4,
+                                   x_rk_30[-2], y_rk_30[-2],
+                                   x_rk_30[-3], y_rk_30[-3],
+                                   30)
+plt.plot(x_ab_30, y_ab_30, label="adams-bashforth 30", linewidth=0.5)
+
 
 plt.legend()
 plt.show()
